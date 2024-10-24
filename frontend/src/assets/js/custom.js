@@ -53,6 +53,7 @@
 	        value = isNaN(value) ? 0 : value;
 	        value++;
 	        quantityAmount.value = value;
+			event.stopPropagation();
 	    }
 
 	    function decreaseValue(event, quantityAmount) {
