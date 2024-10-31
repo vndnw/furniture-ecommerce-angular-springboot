@@ -16,6 +16,9 @@ import { BlogComponent } from './pages/blog/blog.component';
 import { ShopComponent } from './pages/shop/shop.component';
 import { CartComponent } from './orders/cart/cart.component';
 import { ThankyouComponent } from './orders/thankyou/thankyou.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { OtpComponent } from './auth/otp/otp.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,9 @@ import { ThankyouComponent } from './orders/thankyou/thankyou.component';
     ShopComponent,
     CartComponent,
     ThankyouComponent,
+    LoginComponent,
+    RegisterComponent,
+    OtpComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, CommonModule],
   providers: [provideClientHydration()],
