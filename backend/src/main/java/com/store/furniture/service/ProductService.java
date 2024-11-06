@@ -3,7 +3,6 @@ package com.store.furniture.service;
 import com.store.furniture.dto.request.ProductCreationRequest;
 import com.store.furniture.dto.request.ProductUpdateRequest;
 import com.store.furniture.dto.response.ProductResponse;
-import com.store.furniture.entity.Category;
 import com.store.furniture.entity.Product;
 import com.store.furniture.exception.AppException;
 import com.store.furniture.exception.ErrorCode;
@@ -27,7 +26,7 @@ public class ProductService {
 
 
     public ProductResponse createProduct(ProductCreationRequest productCreationRequest) {
-        Category category = categoryRepository.findById(productCreationRequest.getCategoryId())
+        categoryRepository.findById(productCreationRequest.getCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         Product product = productMapper.toProduct(productCreationRequest);
 
@@ -50,7 +49,7 @@ public class ProductService {
                 () -> new AppException(ErrorCode.USER_NOT_EXISTS)
         );
 
-        Category category = categoryRepository.findById(productUpdateRequest.getCategoryId())
+        categoryRepository.findById(productUpdateRequest.getCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         productMapper.updateProduct(product, productUpdateRequest);

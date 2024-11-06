@@ -23,8 +23,10 @@ public class Product {
     double price;
     String image;
 
-//    @ManyToOne
-    Long categoryId;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    Category category;
+
     @CreationTimestamp
      Instant createdAt;
     @UpdateTimestamp

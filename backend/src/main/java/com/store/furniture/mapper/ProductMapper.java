@@ -1,12 +1,8 @@
 package com.store.furniture.mapper;
 
-import com.store.furniture.dto.request.CustomerCreationRequest;
-import com.store.furniture.dto.request.CustomerUpdateRequest;
 import com.store.furniture.dto.request.ProductCreationRequest;
 import com.store.furniture.dto.request.ProductUpdateRequest;
-import com.store.furniture.dto.response.CustomerResponse;
 import com.store.furniture.dto.response.ProductResponse;
-import com.store.furniture.entity.Customer;
 import com.store.furniture.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,10 +11,13 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-
+    @Mapping(source = "categoryId", target = "category.id")
     Product toProduct(ProductCreationRequest productCreationRequest);
 
+    @Mapping(source = "categoryId", target = "category.id")
+//    @Mapping(source = "category.id", target = "categoryId")
     void updateProduct(@MappingTarget Product product , ProductUpdateRequest productUpdateRequest);
 
+    @Mapping(source = "category.id", target = "categoryId")
     ProductResponse toProductResponse(Product product);
 }

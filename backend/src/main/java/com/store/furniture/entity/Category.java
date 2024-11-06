@@ -7,7 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,8 +21,10 @@ public class Category {
     Long id;
     String name;
     String description;
-//    @OneToMany
-//    Set<Product> products;
+
+    @OneToMany(mappedBy = "category")
+    List<Product> products;
+
     @CreationTimestamp
      Instant createdAt;
     @UpdateTimestamp

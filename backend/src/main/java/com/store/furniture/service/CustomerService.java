@@ -1,19 +1,12 @@
 package com.store.furniture.service;
 
-import com.store.furniture.dto.request.AdminCreationRequest;
-import com.store.furniture.dto.request.AdminUpdateRequest;
 import com.store.furniture.dto.request.CustomerCreationRequest;
 import com.store.furniture.dto.request.CustomerUpdateRequest;
-import com.store.furniture.dto.response.AdminResponse;
 import com.store.furniture.dto.response.CustomerResponse;
-import com.store.furniture.entity.Admin;
 import com.store.furniture.entity.Customer;
-import com.store.furniture.enums.Role;
 import com.store.furniture.exception.AppException;
 import com.store.furniture.exception.ErrorCode;
-import com.store.furniture.mapper.AdminMapper;
 import com.store.furniture.mapper.CustomerMapper;
-import com.store.furniture.repository.AdminRepository;
 import com.store.furniture.repository.CustomerRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
