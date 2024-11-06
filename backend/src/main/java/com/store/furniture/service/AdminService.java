@@ -1,6 +1,7 @@
 package com.store.furniture.service;
 
 import com.store.furniture.dto.request.AdminCreationRequest;
+import com.store.furniture.dto.request.AdminUpdateRequest;
 import com.store.furniture.dto.response.AdminResponse;
 import com.store.furniture.entity.Admin;
 import com.store.furniture.enums.Role;
@@ -36,5 +37,24 @@ public class AdminService {
 
     public List<AdminResponse> getAllAdmins() {
         return adminRepository.findAll().stream().map(adminMapper::toAdminResponse).toList();
+    }
+    public AdminResponse getAdminById(String id) {
+         Admin admin = adminRepository.findById(id)
+                 .orElseThrow(
+                 () -> new AppException(ErrorCode.USERNAME_EXISTS)
+         );
+         return adminMapper.toAdminResponse(admin);
+    }
+
+    public AdminResponse updateAdmin(String id, AdminUpdateRequest adminUpdateRequest) {
+        Admin admin = adminRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTS)
+        );
+
+        adminMapper.updateAdmin(admin, adminUpdateRequest);
+        return adminMapper.toAdminResponse(adminRepository.save(admin));
+    }
+    public void deleteAdmin(String id) {
+        adminRepository.deleteById(id);
     }
 }

@@ -12,12 +12,13 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AdminResponse {
+public class CustomerResponse {
     String id;
     String name;
     String username;
     String email;
-    String role;
+    String address;
+    String phone;
     Instant createdAt;
     Instant updatedAt;
 }
