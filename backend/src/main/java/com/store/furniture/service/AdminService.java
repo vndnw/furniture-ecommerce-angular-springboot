@@ -34,7 +34,6 @@ public class AdminService {
         admin.setRole(Role.ADMIN.name());
         return adminMapper.toAdminResponse(adminRepository.save(admin));
     }
-
     public List<AdminResponse> getAllAdmins() {
         return adminRepository.findAll().stream().map(adminMapper::toAdminResponse).toList();
     }

@@ -19,6 +19,7 @@ public enum ErrorCode {
     UNAUTHORIZED(1006, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1007, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     CATEGORY_NOT_FOUND(1008, "Category not found", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_FOUND(1009, "Order not found", HttpStatus.BAD_REQUEST),
     ;
 
 
