@@ -23,13 +23,15 @@ public class ProductService {
     ProductRepository productRepository;
     ProductMapper productMapper;
     CategoryRepository categoryRepository;
+    CloudinaryService cloudinaryService;
 
 
     public ProductResponse createProduct(ProductCreationRequest productCreationRequest) {
         categoryRepository.findById(productCreationRequest.getCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         Product product = productMapper.toProduct(productCreationRequest);
-
+        var urlImg = cloudinaryService.uploadImage(productCreationRequest.getImage());
+        product.setImage(urlImg);
         return productMapper.toProductResponse(productRepository.save(product));
     }
 

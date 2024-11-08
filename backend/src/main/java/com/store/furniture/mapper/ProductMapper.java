@@ -12,6 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface ProductMapper {
 
     @Mapping(source = "categoryId", target = "category.id")
+    @Mapping(target = "image", ignore = true)
     Product toProduct(ProductCreationRequest productCreationRequest);
 
     @Mapping(source = "categoryId", target = "category.id")

@@ -17,7 +17,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    ApiResponse<ProductResponse> createProduct(@RequestBody ProductCreationRequest productCreationRequest) {
+    ApiResponse<ProductResponse> createProduct(ProductCreationRequest productCreationRequest) {
         var product = productService.createProduct(productCreationRequest);
         return ApiResponse.<ProductResponse>builder().data(product).build();
     }

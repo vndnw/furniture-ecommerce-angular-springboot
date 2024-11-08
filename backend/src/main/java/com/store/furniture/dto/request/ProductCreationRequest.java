@@ -1,8 +1,8 @@
 package com.store.furniture.dto.request;
 
-import com.store.furniture.entity.Category;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -13,6 +13,6 @@ public class ProductCreationRequest {
     String name;
     String description;
     double price;
-    String image;
+    MultipartFile image;
     Long categoryId;
 }
