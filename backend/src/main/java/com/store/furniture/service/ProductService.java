@@ -2,6 +2,7 @@ package com.store.furniture.service;
 
 import com.store.furniture.dto.request.ProductCreationRequest;
 import com.store.furniture.dto.request.ProductUpdateRequest;
+import com.store.furniture.dto.response.PaginatedResponse;
 import com.store.furniture.dto.response.ProductResponse;
 import com.store.furniture.entity.Product;
 import com.store.furniture.exception.AppException;
@@ -12,6 +13,8 @@ import com.store.furniture.repository.ProductRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,8 +38,16 @@ public class ProductService {
         return productMapper.toProductResponse(productRepository.save(product));
     }
 
-    public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream().map(productMapper::toProductResponse).toList();
+    public PaginatedResponse<ProductResponse> getAllProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        var productPage = productRepository.findAll(pageable);
+        var products = productPage.stream().map(productMapper::toProductResponse).toList();
+        return PaginatedResponse.<ProductResponse>builder()
+                .data(products)
+                .currentPage(productPage.getNumber())
+                .totalPages(productPage.getTotalPages())
+                .totalItems(productPage.getTotalElements())
+                .build();
     }
     public ProductResponse getProductById(String id) {
         Product product = productRepository.findById(id)

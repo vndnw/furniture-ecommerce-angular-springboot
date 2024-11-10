@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -22,17 +23,18 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @Column(name = "customer_id", nullable = false)
-    String customerId;
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    Customer customer;
 
     @Enumerated(EnumType.STRING)
     OrderStatus status;
 
     @Column(nullable = false)
-    Double totalAmount;
+    double totalAmount;
 
-    String shippingAddress;
-    String shippingPhoneNumber;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<OrderItem> orderItems;
 
     @CreationTimestamp
     Instant createdAt;

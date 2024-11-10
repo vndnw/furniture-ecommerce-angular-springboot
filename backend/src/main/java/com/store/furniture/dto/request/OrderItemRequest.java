@@ -1,5 +1,6 @@
 package com.store.furniture.dto.request;
 
+import com.store.furniture.entity.OrderItem;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderCreationRequest {
-    String customerId;
-    List<OrderItemRequest> orderItems;
+public class OrderItemRequest {
+    String productId;
+    int quantity;
 }

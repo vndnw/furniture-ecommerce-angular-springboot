@@ -4,6 +4,8 @@ import com.store.furniture.dto.ApiResponse;
 import com.store.furniture.dto.request.OrderCreationRequest;
 import com.store.furniture.dto.request.OrderUpdateRequest;
 import com.store.furniture.dto.response.OrderResponse;
+import com.store.furniture.dto.response.PaginatedResponse;
+import com.store.furniture.enums.OrderStatus;
 import com.store.furniture.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +25,9 @@ public class OrderController {
     }
 
     @GetMapping
-    ApiResponse<List<OrderResponse>> getAllOrders() {
-        var orders = orderService.getAllOrders();
-        return ApiResponse.<List<OrderResponse>>builder().data(orders).build();
+    ApiResponse<PaginatedResponse<OrderResponse>> getAllOrders(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        var orders = orderService.getAllOrders(page, size);
+        return ApiResponse.<PaginatedResponse<OrderResponse>>builder().data(orders).build();
     }
 
     @GetMapping("/{id}")
@@ -35,8 +37,8 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    ApiResponse<OrderResponse> updateOrder(@PathVariable String id, @RequestBody OrderUpdateRequest request) {
-        var order = orderService.updateOrder(id, request);
+    ApiResponse<OrderResponse> updateOrder(@PathVariable String id, @RequestParam OrderStatus status) {
+        var order = orderService.updateOrderStatus(id, status);
         return ApiResponse.<OrderResponse>builder().data(order).build();
     }
 

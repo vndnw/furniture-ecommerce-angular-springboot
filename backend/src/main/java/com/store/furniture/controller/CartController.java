@@ -1,36 +1,54 @@
 package com.store.furniture.controller;
 
 import com.store.furniture.dto.ApiResponse;
-import com.store.furniture.dto.request.CartCreationRequest;
 import com.store.furniture.dto.response.CartResponse;
-import com.store.furniture.entity.Cart;
 import com.store.furniture.service.CartService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/carts")
 public class CartController {
-    CartService cartService;
+    @Autowired
+    private CartService cartService;
 
-    @PostMapping
-    ApiResponse<CartResponse> createCart(@RequestBody CartCreationRequest cartCreationRequest) {
-        var cart = cartService.createCart(cartCreationRequest);
+    @GetMapping("/{customerId}")
+    public ApiResponse<CartResponse> getCartByCustomerId(@PathVariable String customerId) {
+        CartResponse cartResponse = cartService.getCartByCustomerId(customerId);
         return ApiResponse.<CartResponse>builder()
-                .data(cart).build();
+                .data(cartResponse).build();
     }
 
-    @GetMapping("/{id}")
-    ApiResponse<CartResponse> getCartById(@PathVariable String id) {
-        var cart = cartService.getCartById(id);
+    @PostMapping("/{customerId}/items")
+    public ApiResponse<CartResponse> addItemToCart(
+            @PathVariable String customerId,
+            @RequestParam String productId,
+            @RequestParam int quantity
+    ) {
+        CartResponse updatedCart = cartService.addItemToCart(customerId, productId, quantity);
         return ApiResponse.<CartResponse>builder()
-                .data(cart).build();
+                .data(updatedCart).build();
     }
 
-    @DeleteMapping("/{id}")
-    ApiResponse<Void> deleteCart(@PathVariable String id) {
-        cartService.deleteCart(id);
-        return ApiResponse.<Void>builder().build();
+    @PutMapping("/{customerId}/items")
+    public ApiResponse<CartResponse> updateCartItem(
+            @PathVariable String customerId,
+            @RequestParam String productId,
+            @RequestParam int quantity
+    ) {
+        CartResponse updatedCart = cartService.updateCartItem(customerId, productId, quantity);
+        return ApiResponse.<CartResponse>builder()
+                .data(updatedCart).build();
     }
+
+    @DeleteMapping("/{customerId}/items/{productId}")
+    public ApiResponse<CartResponse> removeItemFromCart(
+            @PathVariable String customerId,
+            @PathVariable String productId
+    ) {
+        CartResponse updatedCart = cartService.removeItemFromCart(customerId, productId);
+        return ApiResponse.<CartResponse>builder()
+                .data(updatedCart).build();
+    }
+
 }

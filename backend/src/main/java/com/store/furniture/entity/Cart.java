@@ -21,11 +21,12 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @Column(name = "customer_id", nullable = false)
-    String customerId;
+    @OneToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    Customer customer;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CartItem> items;
+    List<CartItem> cartItems;
 
     @CreationTimestamp
     Instant createdAt;

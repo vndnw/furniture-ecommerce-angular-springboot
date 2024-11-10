@@ -3,9 +3,11 @@ package com.store.furniture.controller;
 import com.store.furniture.dto.ApiResponse;
 import com.store.furniture.dto.request.ProductCreationRequest;
 import com.store.furniture.dto.request.ProductUpdateRequest;
+import com.store.furniture.dto.response.PaginatedResponse;
 import com.store.furniture.dto.response.ProductResponse;
 import com.store.furniture.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +25,9 @@ public class ProductController {
     }
 
     @GetMapping
-    ApiResponse<List<ProductResponse>> getAllProducts() {
-        var products = productService.getAllProducts();
-        return ApiResponse.<List<ProductResponse>>builder().data(products).build();
+    ApiResponse<PaginatedResponse<ProductResponse>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        var products = productService.getAllProducts(page, size);
+        return ApiResponse.<PaginatedResponse<ProductResponse>>builder().data(products).build();
     }
 
     @GetMapping("/{id}")

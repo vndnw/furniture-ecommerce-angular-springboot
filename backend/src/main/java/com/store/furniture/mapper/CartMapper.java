@@ -11,15 +11,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {CartItemMapper.class})
 public interface CartMapper {
 
-//    @Mapping(source = "categoryId", target = "category.id")
-    Cart tocCart(CartCreationRequest cartCreationRequest);
-
-//    @Mapping(source = "categoryId", target = "category.id")
-//    @Mapping(source = "category.id", target = "categoryId")
-
-//    @Mapping(source = "category.id", target = "categoryId")
-    CartResponse toCartResponse(Cart cart);
+    @Mapping(source = "cartItems", target = "cartItems")
+    @Mapping(target = "totalAmount", expression = "java(cart.getCartItems().stream().mapToDouble(item -> item.getQuantity() * item.getPrice()).sum())")
+    CartResponse toResponse(Cart cart);
 }

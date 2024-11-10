@@ -23,7 +23,11 @@ public enum ErrorCode {
     IMAGE_UPLOAD_FAILED(1010, "Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
     FILE_EMPTY(1011, "File is empty", HttpStatus.BAD_REQUEST),
     FILE_SIZE_EXCEEDS_LIMIT(1012, "File size exceeds the maximum limit", HttpStatus.BAD_REQUEST),
-    INVALID_FILE_TYPE(1013, "Invalid file type. Only image files are allowed", HttpStatus.BAD_REQUEST);
+    INVALID_FILE_TYPE(1013, "Invalid file type. Only image files are allowed", HttpStatus.BAD_REQUEST),
+    CUSTOMER_NOT_FOUND(1014, "Customer not found", HttpStatus.BAD_REQUEST),
+    PRODUCT_NOT_FOUND(1015, "Product not found", HttpStatus.BAD_REQUEST),
+    CART_NOT_FOUND(1016, "Cart not found", HttpStatus.BAD_REQUEST),
+    ;
 
 
     private final int code;
