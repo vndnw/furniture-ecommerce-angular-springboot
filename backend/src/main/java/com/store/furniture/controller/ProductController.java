@@ -7,7 +7,6 @@ import com.store.furniture.dto.response.PaginatedResponse;
 import com.store.furniture.dto.response.ProductResponse;
 import com.store.furniture.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +27,12 @@ public class ProductController {
     ApiResponse<PaginatedResponse<ProductResponse>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         var products = productService.getAllProducts(page, size);
         return ApiResponse.<PaginatedResponse<ProductResponse>>builder().data(products).build();
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<List<ProductResponse>> searchProducts(@RequestParam String keyword) {
+        var products = productService.searchProducts(keyword);
+        return ApiResponse.<List<ProductResponse>>builder().data(products).build();
     }
 
     @GetMapping("/{id}")

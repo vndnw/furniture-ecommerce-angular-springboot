@@ -17,7 +17,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Admin {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -25,6 +25,8 @@ public class Admin {
     String username;
     String password;
     String email;
+    String address;
+    String phone;
     String role;
     @CreationTimestamp
      Instant createdAt;

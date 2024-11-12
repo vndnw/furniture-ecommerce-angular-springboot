@@ -22,8 +22,8 @@ public class Cart {
     String id;
 
     @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    Customer customer;
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     List<CartItem> cartItems;

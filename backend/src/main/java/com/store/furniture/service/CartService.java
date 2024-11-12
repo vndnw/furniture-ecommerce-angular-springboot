@@ -1,25 +1,17 @@
 package com.store.furniture.service;
 
-import com.store.furniture.dto.request.CartCreationRequest;
-import com.store.furniture.dto.request.ProductCreationRequest;
-import com.store.furniture.dto.request.ProductUpdateRequest;
 import com.store.furniture.dto.response.CartResponse;
-import com.store.furniture.dto.response.ProductResponse;
 import com.store.furniture.entity.*;
 import com.store.furniture.exception.AppException;
 import com.store.furniture.exception.ErrorCode;
 import com.store.furniture.mapper.CartMapper;
-import com.store.furniture.mapper.ProductMapper;
 import com.store.furniture.repository.CartRepository;
-import com.store.furniture.repository.CategoryRepository;
 import com.store.furniture.repository.ProductRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,13 +24,13 @@ public class CartService {
     CartMapper cartMapper;
 
     public CartResponse getCartByCustomerId(String customerId) {
-        Cart cart = cartRepository.findByCustomerId(customerId)
+        Cart cart = cartRepository.findByUserId(customerId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
         return cartMapper.toResponse(cart);
     }
 
     public CartResponse addItemToCart(String customerId, String productId, int quantity) {
-        Cart cart = cartRepository.findByCustomerId(customerId)
+        Cart cart = cartRepository.findByUserId(customerId)
                 .orElseGet(() -> createNewCart(customerId));
 
         Product product = productRepository.findById(productId)
@@ -64,7 +56,7 @@ public class CartService {
     }
 
     public CartResponse updateCartItem(String customerId, String productId, int quantity) {
-        Cart cart = cartRepository.findByCustomerId(customerId)
+        Cart cart = cartRepository.findByUserId(customerId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
 
         Optional<CartItem> cartItem = cart.getCartItems().stream()
@@ -82,7 +74,7 @@ public class CartService {
     }
 
     public CartResponse removeItemFromCart(String customerId, String productId) {
-        Cart cart = cartRepository.findByCustomerId(customerId)
+        Cart cart = cartRepository.findByUserId(customerId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
 
         CartItem cartItem = cart.getCartItems().stream()
@@ -97,9 +89,9 @@ public class CartService {
 
     private Cart createNewCart(String customerId) {
         Cart cart = new Cart();
-        Customer customer = new Customer();
-        customer.setId(customerId);
-        cart.setCustomer(customer);
+        User user = new User();
+        user.setId(customerId);
+        cart.setUser(user);
         return cartRepository.save(cart);
     }
 }

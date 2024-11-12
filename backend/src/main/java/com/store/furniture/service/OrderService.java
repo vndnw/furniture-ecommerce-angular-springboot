@@ -1,11 +1,8 @@
 package com.store.furniture.service;
 
 import com.store.furniture.dto.request.OrderCreationRequest;
-import com.store.furniture.dto.request.OrderUpdateRequest;
 import com.store.furniture.dto.response.OrderResponse;
 import com.store.furniture.dto.response.PaginatedResponse;
-import com.store.furniture.dto.response.ProductResponse;
-import com.store.furniture.entity.Customer;
 import com.store.furniture.entity.Order;
 import com.store.furniture.entity.OrderItem;
 import com.store.furniture.entity.Product;
@@ -13,14 +10,15 @@ import com.store.furniture.enums.OrderStatus;
 import com.store.furniture.exception.AppException;
 import com.store.furniture.exception.ErrorCode;
 import com.store.furniture.mapper.OrderMapper;
-import com.store.furniture.repository.CustomerRepository;
 import com.store.furniture.repository.OrderRepository;
 import com.store.furniture.repository.ProductRepository;
+import com.store.furniture.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,15 +29,15 @@ import java.util.List;
 public class OrderService {
     OrderRepository orderRepository;
     OrderMapper orderMapper;
-    CustomerRepository customerRepository;
+    UserRepository userRepository;
     ProductRepository productRepository;
 
     public OrderResponse createOrder(OrderCreationRequest orderRequest) {
-        Customer customer = customerRepository.findById(orderRequest.getCustomerId())
+        var user = userRepository.findById(orderRequest.getCustomerId())
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
 
         Order order = new Order();
-        order.setCustomer(customer);
+        order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
 
         List<OrderItem> orderItems = orderRequest.getOrderItems().stream().map(itemRequest -> {
@@ -62,7 +60,7 @@ public class OrderService {
         return orderMapper.toResponse(order);
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     public OrderResponse updateOrderStatus(String orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
@@ -90,7 +88,7 @@ public class OrderService {
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         return orderMapper.toResponse(order);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteOrder(String id) {
         orderRepository.deleteById(id);
     }

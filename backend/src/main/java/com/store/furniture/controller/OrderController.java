@@ -2,15 +2,12 @@ package com.store.furniture.controller;
 
 import com.store.furniture.dto.ApiResponse;
 import com.store.furniture.dto.request.OrderCreationRequest;
-import com.store.furniture.dto.request.OrderUpdateRequest;
 import com.store.furniture.dto.response.OrderResponse;
 import com.store.furniture.dto.response.PaginatedResponse;
 import com.store.furniture.enums.OrderStatus;
 import com.store.furniture.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/orders")

@@ -1,4 +1,4 @@
-package com.store.furniture.dto.request;
+package com.store.furniture.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CustomerCreationRequest {
-    String username;
-    String password;
+public class IntrospectResponse {
+    boolean valid;
 }

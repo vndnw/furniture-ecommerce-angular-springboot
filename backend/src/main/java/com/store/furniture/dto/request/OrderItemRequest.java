@@ -1,10 +1,7 @@
 package com.store.furniture.dto.request;
 
-import com.store.furniture.entity.OrderItem;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @Builder

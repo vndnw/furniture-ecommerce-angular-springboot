@@ -10,6 +10,7 @@ import com.store.furniture.repository.CategoryRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class CategoryService {
     CategoryRepository categoryRepository;
     CategoryMapper categoryMapper;
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse createCategory(CategoryCreationRequest categoryCreationRequest) {
         var category = categoryMapper.toCategory(categoryCreationRequest);
         return categoryMapper.toCategoryResponse(categoryRepository.save(category));
@@ -37,7 +38,7 @@ public class CategoryService {
          );
          return categoryMapper.toCategoryResponse(category);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse updateCategory(Long id, CategoryUpdateRequest customerUpdateRequest) {
         var category = categoryRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTS)
@@ -46,6 +47,7 @@ public class CategoryService {
         categoryMapper.updateCategory(category, customerUpdateRequest);
         return categoryMapper.toCategoryResponse(categoryRepository.save(category));
     }
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }

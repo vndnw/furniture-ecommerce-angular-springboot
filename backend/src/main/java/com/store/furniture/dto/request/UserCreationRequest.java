@@ -8,9 +8,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AdminUpdateRequest {
+public class UserCreationRequest {
     String name;
+    String username;
     String password;
     String email;
-    String role;
 }
