@@ -34,7 +34,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    ApiResponse<OrderResponse> updateOrder(@PathVariable String id, @RequestParam OrderStatus status) {
+    ApiResponse<OrderResponse> updateOrderStatus(@PathVariable String id, @RequestParam OrderStatus status) {
         var order = orderService.updateOrderStatus(id, status);
         return ApiResponse.<OrderResponse>builder().data(order).build();
     }

@@ -12,12 +12,15 @@ import com.store.furniture.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -50,14 +53,50 @@ public class UserService {
          );
          return userMapper.toResponse(admin);
     }
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserResponse> searchUsers(String keyword) {
+        return userRepository.searchUsers(keyword).stream().map(userMapper::toResponse).toList();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponse changeRole(String id, String role) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTS)
+        );
+        try {
+            Role.valueOf(role);
+        } catch (IllegalArgumentException e) {
+            throw new AppException(ErrorCode.INVALID_ROLE);
+        }
+        user.setRole(role);
+        return userMapper.toResponse(userRepository.save(user));
+    }
 
     public UserResponse updateUser(String id, UserUpdateRequest userUpdateRequest) {
-        User admin = userRepository.findById(id).orElseThrow(
+        String authenticatedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User authenticatedUser = userRepository.findByUsername(authenticatedUsername)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+
+        boolean isAdmin = authenticatedUser.getRole().equals("ADMIN");
+
+        if (!isAdmin && !authenticatedUser.getId().equals(id)) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+
+        User user = userRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTS)
         );
 
-        userMapper.updateUser(admin, userUpdateRequest);
-        return userMapper.toResponse(userRepository.save(admin));
+        userMapper.updateUser(user, userUpdateRequest);
+        return userMapper.toResponse(userRepository.save(user));
+    }
+    public UserResponse getProfile() {
+        var userDetails = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(userDetails.getName())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+        return userMapper.toResponse(user);
     }
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(String id) {

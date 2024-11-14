@@ -5,6 +5,7 @@ import com.store.furniture.dto.request.CategoryCreationRequest;
 import com.store.furniture.dto.request.CategoryUpdateRequest;
 import com.store.furniture.dto.response.CategoryResponse;
 import com.store.furniture.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping
-    ApiResponse<CategoryResponse> createCategory(@RequestBody CategoryCreationRequest categoryCreationRequest) {
+    ApiResponse<CategoryResponse> createCategory(@RequestBody @Valid CategoryCreationRequest categoryCreationRequest) {
         var category = categoryService.createCategory(categoryCreationRequest);
         return ApiResponse.<CategoryResponse>builder().data(category).build();
     }
@@ -35,7 +36,7 @@ public class CategoryController {
     }
 
     @PutMapping("{id}")
-    ApiResponse<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryUpdateRequest categoryUpdateRequest) {
+    ApiResponse<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryUpdateRequest categoryUpdateRequest) {
         var category = categoryService.updateCategory(id, categoryUpdateRequest);
         return ApiResponse.<CategoryResponse>builder().data(category).build();
     }

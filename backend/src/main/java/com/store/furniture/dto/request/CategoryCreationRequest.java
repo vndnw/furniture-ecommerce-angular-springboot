@@ -1,5 +1,6 @@
 package com.store.furniture.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,9 +10,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryCreationRequest {
+    @NotBlank(message = "NAME_MANDATORY")
     String name;
+
+    @NotBlank(message = "DESCRIPTION_MANDATORY")
     String description;
-    double price;
-    String image;
-    Long categoryId;
 }

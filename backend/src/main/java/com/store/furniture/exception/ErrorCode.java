@@ -27,6 +27,27 @@ public enum ErrorCode {
     CUSTOMER_NOT_FOUND(1014, "Customer not found", HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_FOUND(1015, "Product not found", HttpStatus.BAD_REQUEST),
     CART_NOT_FOUND(1016, "Cart not found", HttpStatus.BAD_REQUEST),
+    INVALID_ROLE(1017, "Invalid role", HttpStatus.BAD_REQUEST),
+    NAME_MANDATORY(1020, "Name is mandatory", HttpStatus.BAD_REQUEST),
+    NAME_SIZE(1021, "Name must be between 2 and 50 characters", HttpStatus.BAD_REQUEST),
+    EMAIL_MANDATORY(1022, "Email is mandatory", HttpStatus.BAD_REQUEST),
+    EMAIL_INVALID(1023, "Email should be valid", HttpStatus.BAD_REQUEST),
+    ADDRESS_MANDATORY(1024, "Address is mandatory", HttpStatus.BAD_REQUEST),
+    ADDRESS_SIZE(1025, "Address must be between 5 and 100 characters", HttpStatus.BAD_REQUEST),
+    PHONE_MANDATORY(1026, "Phone is mandatory", HttpStatus.BAD_REQUEST),
+    PHONE_INVALID(1027, "Phone number is invalid", HttpStatus.BAD_REQUEST),
+    USERNAME_MANDATORY(1028, "Username is mandatory", HttpStatus.BAD_REQUEST),
+    USERNAME_SIZE(1029, "Username must be between 2 and 50 characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_MANDATORY(1030, "Password is mandatory", HttpStatus.BAD_REQUEST),
+    PASSWORD_SIZE(1031, "Password must be between 8 and 100 characters", HttpStatus.BAD_REQUEST),
+    PRODUCT_NAME_MANDATORY(1032, "Name is mandatory", HttpStatus.BAD_REQUEST),
+    PRODUCT_NAME_SIZE(1033, "Name must be at least 2 characters", HttpStatus.BAD_REQUEST),
+    DESCRIPTION_MANDATORY(1034, "Description is mandatory", HttpStatus.BAD_REQUEST),
+    DESCRIPTION_SIZE(1035, "Description must be at least 10 characters", HttpStatus.BAD_REQUEST),
+    PRICE_MANDATORY(1036, "Price is mandatory", HttpStatus.BAD_REQUEST),
+    IMAGE_MANDATORY(1037, "Image is mandatory", HttpStatus.BAD_REQUEST),
+    CATEGORY_ID_MANDATORY(1038, "Category ID is mandatory", HttpStatus.BAD_REQUEST),
+
     ;
 
 

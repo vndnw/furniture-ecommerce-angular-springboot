@@ -1,16 +1,21 @@
 package com.store.furniture.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationRequest {
-    private String username;
-    private String password;
+    @NotBlank(message = "USERNAME_MANDATORY")
+    @Size(min = 2, max = 50, message = "USERNAME_SIZE")
+    String username;
+
+    @NotBlank(message = "PASSWORD_MANDATORY")
+    @Size(min = 8, max = 100, message = "PASSWORD_SIZE")
+    String password;
 }

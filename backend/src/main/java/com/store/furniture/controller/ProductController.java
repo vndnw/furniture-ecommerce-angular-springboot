@@ -6,6 +6,7 @@ import com.store.furniture.dto.request.ProductUpdateRequest;
 import com.store.furniture.dto.response.PaginatedResponse;
 import com.store.furniture.dto.response.ProductResponse;
 import com.store.furniture.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    ApiResponse<ProductResponse> createProduct(ProductCreationRequest productCreationRequest) {
+    ApiResponse<ProductResponse> createProduct(@Valid ProductCreationRequest productCreationRequest) {
         var product = productService.createProduct(productCreationRequest);
         return ApiResponse.<ProductResponse>builder().data(product).build();
     }
@@ -42,7 +43,7 @@ public class ProductController {
     }
 
     @PutMapping("{id}")
-    ApiResponse<ProductResponse> updateProduct(@PathVariable String id, @RequestBody ProductUpdateRequest productUpdateRequest) {
+    ApiResponse<ProductResponse> updateProduct(@PathVariable String id, @RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
         var product = productService.updateProduct(id, productUpdateRequest);
         return ApiResponse.<ProductResponse>builder().data(product).build();
     }
