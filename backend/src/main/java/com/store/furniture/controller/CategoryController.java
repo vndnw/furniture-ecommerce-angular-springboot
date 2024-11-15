@@ -6,10 +6,9 @@ import com.store.furniture.dto.request.CategoryUpdateRequest;
 import com.store.furniture.dto.response.CategoryResponse;
 import com.store.furniture.service.CategoryService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
@@ -36,7 +35,8 @@ public class CategoryController {
     }
 
     @PutMapping("{id}")
-    ApiResponse<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryUpdateRequest categoryUpdateRequest) {
+    ApiResponse<CategoryResponse> updateCategory(
+            @PathVariable Long id, @RequestBody @Valid CategoryUpdateRequest categoryUpdateRequest) {
         var category = categoryService.updateCategory(id, categoryUpdateRequest);
         return ApiResponse.<CategoryResponse>builder().data(category).build();
     }

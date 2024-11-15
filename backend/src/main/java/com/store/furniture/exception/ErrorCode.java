@@ -48,13 +48,9 @@ public enum ErrorCode {
     PRICE_MANDATORY(1036, "Price is mandatory", HttpStatus.BAD_REQUEST),
     IMAGE_MANDATORY(1037, "Image is mandatory", HttpStatus.BAD_REQUEST),
     CATEGORY_ID_MANDATORY(1038, "Category ID is mandatory", HttpStatus.BAD_REQUEST),
-
     ;
-
 
     private final int code;
     private final String message;
     private final HttpStatus httpStatus;
-
-
 }

@@ -7,10 +7,9 @@ import com.store.furniture.dto.response.PaginatedResponse;
 import com.store.furniture.dto.response.ProductResponse;
 import com.store.furniture.service.ProductService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -25,9 +24,12 @@ public class ProductController {
     }
 
     @GetMapping
-    ApiResponse<PaginatedResponse<ProductResponse>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    ApiResponse<PaginatedResponse<ProductResponse>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         var products = productService.getAllProducts(page, size);
-        return ApiResponse.<PaginatedResponse<ProductResponse>>builder().data(products).build();
+        return ApiResponse.<PaginatedResponse<ProductResponse>>builder()
+                .data(products)
+                .build();
     }
 
     @GetMapping("/search")
@@ -43,7 +45,8 @@ public class ProductController {
     }
 
     @PutMapping("{id}")
-    ApiResponse<ProductResponse> updateProduct(@PathVariable String id, @Valid ProductUpdateRequest productUpdateRequest) {
+    ApiResponse<ProductResponse> updateProduct(
+            @PathVariable String id, @Valid ProductUpdateRequest productUpdateRequest) {
         var product = productService.updateProduct(id, productUpdateRequest);
         return ApiResponse.<ProductResponse>builder().data(product).build();
     }

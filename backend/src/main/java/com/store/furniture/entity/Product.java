@@ -1,12 +1,11 @@
 package com.store.furniture.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.Instant;
 
 @Entity
 @Data
@@ -18,6 +17,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+
     String name;
     String description;
     double price;
@@ -28,9 +28,8 @@ public class Product {
     Category category;
 
     @CreationTimestamp
-     Instant createdAt;
+    Instant createdAt;
+
     @UpdateTimestamp
-     Instant updatedAt;
-
-
+    Instant updatedAt;
 }

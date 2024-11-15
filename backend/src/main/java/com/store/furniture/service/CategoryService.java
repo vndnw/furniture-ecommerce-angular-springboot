@@ -7,13 +7,12 @@ import com.store.furniture.exception.AppException;
 import com.store.furniture.exception.ErrorCode;
 import com.store.furniture.mapper.CategoryMapper;
 import com.store.furniture.repository.CategoryRepository;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,24 +28,24 @@ public class CategoryService {
     }
 
     public List<CategoryResponse> getAllCategories() {
-        return categoryRepository.findAll().stream().map(categoryMapper::toCategoryResponse).toList();
+        return categoryRepository.findAll().stream()
+                .map(categoryMapper::toCategoryResponse)
+                .toList();
     }
+
     public CategoryResponse getCategoryById(Long id) {
-        var category = categoryRepository.findById(id)
-                 .orElseThrow(
-                 () -> new AppException(ErrorCode.USERNAME_EXISTS)
-         );
-         return categoryMapper.toCategoryResponse(category);
+        var category = categoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USERNAME_EXISTS));
+        return categoryMapper.toCategoryResponse(category);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse updateCategory(Long id, CategoryUpdateRequest customerUpdateRequest) {
-        var category = categoryRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_EXISTS)
-        );
+        var category = categoryRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
 
         categoryMapper.updateCategory(category, customerUpdateRequest);
         return categoryMapper.toCategoryResponse(categoryRepository.save(category));
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);

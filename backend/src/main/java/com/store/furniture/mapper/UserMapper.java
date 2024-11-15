@@ -12,6 +12,7 @@ public interface UserMapper {
 
     User toUser(UserCreationRequest adminCreationRequest);
 
-    void updateUser(@MappingTarget User user , UserUpdateRequest AdminUpdateRequest);
+    void updateUser(@MappingTarget User user, UserUpdateRequest AdminUpdateRequest);
+
     UserResponse toResponse(User admin);
 }

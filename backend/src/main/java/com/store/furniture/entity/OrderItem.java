@@ -21,9 +21,8 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-     Product product;
-     int quantity;
-     double price;
+    Product product;
 
-
+    int quantity;
+    double price;
 }

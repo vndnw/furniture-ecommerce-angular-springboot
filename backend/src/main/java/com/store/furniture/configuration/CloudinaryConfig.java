@@ -8,9 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CloudinaryConfig {
     @Bean
-    public Cloudinary getCloudinary(){
+    public Cloudinary getCloudinary() {
         Dotenv dotenv = Dotenv.load();
         return new Cloudinary(dotenv.get("CLOUDINARY_URL"));
     }
-
 }

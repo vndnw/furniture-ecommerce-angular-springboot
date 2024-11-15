@@ -23,6 +23,7 @@ public class ProductCreationRequest {
 
     @NotNull(message = "PRICE_MANDATORY")
     double price;
+
     MultipartFile image;
 
     @NotNull(message = "CATEGORY_ID_MANDATORY")

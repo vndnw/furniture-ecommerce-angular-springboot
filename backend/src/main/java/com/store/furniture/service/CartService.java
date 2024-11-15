@@ -7,12 +7,11 @@ import com.store.furniture.exception.ErrorCode;
 import com.store.furniture.mapper.CartMapper;
 import com.store.furniture.repository.CartRepository;
 import com.store.furniture.repository.ProductRepository;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,17 +23,16 @@ public class CartService {
     CartMapper cartMapper;
 
     public CartResponse getCartByCustomerId(String customerId) {
-        Cart cart = cartRepository.findByUserId(customerId)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+        Cart cart =
+                cartRepository.findByUserId(customerId).orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
         return cartMapper.toResponse(cart);
     }
 
     public CartResponse addItemToCart(String customerId, String productId, int quantity) {
-        Cart cart = cartRepository.findByUserId(customerId)
-                .orElseGet(() -> createNewCart(customerId));
+        Cart cart = cartRepository.findByUserId(customerId).orElseGet(() -> createNewCart(customerId));
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        Product product =
+                productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
         Optional<CartItem> existingItem = cart.getCartItems().stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
@@ -56,8 +54,8 @@ public class CartService {
     }
 
     public CartResponse updateCartItem(String customerId, String productId, int quantity) {
-        Cart cart = cartRepository.findByUserId(customerId)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+        Cart cart =
+                cartRepository.findByUserId(customerId).orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
 
         Optional<CartItem> cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
@@ -74,8 +72,8 @@ public class CartService {
     }
 
     public CartResponse removeItemFromCart(String customerId, String productId) {
-        Cart cart = cartRepository.findByUserId(customerId)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
+        Cart cart =
+                cartRepository.findByUserId(customerId).orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
 
         CartItem cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
@@ -85,7 +83,6 @@ public class CartService {
         cart.getCartItems().remove(cartItem);
         return cartMapper.toResponse(cartRepository.save(cart));
     }
-
 
     private Cart createNewCart(String customerId) {
         Cart cart = new Cart();

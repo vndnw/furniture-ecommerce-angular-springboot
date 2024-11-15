@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderItemResponse {
-      String productId;
-      int quantity;
-      double price;
+    String productId;
+    int quantity;
+    double price;
 }

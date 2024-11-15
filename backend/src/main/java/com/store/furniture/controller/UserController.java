@@ -6,10 +6,9 @@ import com.store.furniture.dto.request.UserUpdateRequest;
 import com.store.furniture.dto.response.UserResponse;
 import com.store.furniture.service.UserService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -38,8 +37,7 @@ public class UserController {
     @GetMapping("/me")
     ApiResponse<UserResponse> getMe() {
         var user = userService.getProfile();
-        return ApiResponse.<UserResponse>builder()
-                .data(user).build();
+        return ApiResponse.<UserResponse>builder().data(user).build();
     }
 
     @GetMapping("/search")
@@ -55,7 +53,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody @Valid UserUpdateRequest userUpdateRequest) {
+    ApiResponse<UserResponse> updateUser(
+            @PathVariable String id, @RequestBody @Valid UserUpdateRequest userUpdateRequest) {
         var user = userService.updateUser(id, userUpdateRequest);
         return ApiResponse.<UserResponse>builder().data(user).build();
     }

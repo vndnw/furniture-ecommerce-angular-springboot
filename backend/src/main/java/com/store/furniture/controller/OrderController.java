@@ -22,9 +22,12 @@ public class OrderController {
     }
 
     @GetMapping
-    ApiResponse<PaginatedResponse<OrderResponse>> getAllOrders(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    ApiResponse<PaginatedResponse<OrderResponse>> getAllOrders(
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         var orders = orderService.getAllOrders(page, size);
-        return ApiResponse.<PaginatedResponse<OrderResponse>>builder().data(orders).build();
+        return ApiResponse.<PaginatedResponse<OrderResponse>>builder()
+                .data(orders)
+                .build();
     }
 
     @GetMapping("/{id}")

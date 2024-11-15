@@ -1,9 +1,8 @@
 package com.store.furniture.dto.request;
 
+import java.util.List;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @Builder

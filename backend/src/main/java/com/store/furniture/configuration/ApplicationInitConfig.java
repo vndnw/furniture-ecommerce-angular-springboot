@@ -17,12 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ApplicationInitConfig {
-     PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @Bean
     ApplicationRunner applicationRunner(UserRepository adminRepository) {
         return args -> {
-
             if (adminRepository.findByUsername("admin").isEmpty()) {
 
                 User user = User.builder()

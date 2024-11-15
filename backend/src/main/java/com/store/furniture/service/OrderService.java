@@ -13,6 +13,7 @@ import com.store.furniture.mapper.OrderMapper;
 import com.store.furniture.repository.OrderRepository;
 import com.store.furniture.repository.ProductRepository;
 import com.store.furniture.repository.UserRepository;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,8 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,37 +32,41 @@ public class OrderService {
     ProductRepository productRepository;
 
     public OrderResponse createOrder(OrderCreationRequest orderRequest) {
-        var user = userRepository.findById(orderRequest.getUserId())
+        var user = userRepository
+                .findById(orderRequest.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
 
         Order order = new Order();
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
 
-        List<OrderItem> orderItems = orderRequest.getOrderItems().stream().map(itemRequest -> {
-            Product product = productRepository.findById(itemRequest.getProductId())
-                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        List<OrderItem> orderItems = orderRequest.getOrderItems().stream()
+                .map(itemRequest -> {
+                    Product product = productRepository
+                            .findById(itemRequest.getProductId())
+                            .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setProduct(product);
-            orderItem.setQuantity(itemRequest.getQuantity());
-            orderItem.setPrice(product.getPrice() * itemRequest.getQuantity());
-            return orderItem;
-        }).toList();
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setOrder(order);
+                    orderItem.setProduct(product);
+                    orderItem.setQuantity(itemRequest.getQuantity());
+                    orderItem.setPrice(product.getPrice() * itemRequest.getQuantity());
+                    return orderItem;
+                })
+                .toList();
 
         order.setOrderItems(orderItems);
-        order.setTotalAmount(orderItems.stream().mapToDouble(OrderItem::getPrice).sum());
+        order.setTotalAmount(
+                orderItems.stream().mapToDouble(OrderItem::getPrice).sum());
 
         orderRepository.save(order);
-var te = orderMapper.toResponse(order);
+        var te = orderMapper.toResponse(order);
         return orderMapper.toResponse(order);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     public OrderResponse updateOrderStatus(String orderId, OrderStatus status) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         order.setStatus(status);
         orderRepository.save(order);
@@ -84,10 +87,10 @@ var te = orderMapper.toResponse(order);
     }
 
     public OrderResponse getOrderById(String orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         return orderMapper.toResponse(order);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteOrder(String id) {
         orderRepository.deleteById(id);

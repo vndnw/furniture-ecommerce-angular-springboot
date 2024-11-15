@@ -10,7 +10,4 @@ public interface OrderItemMapper {
 
     @Mapping(source = "product.id", target = "productId") // Map Product's ID to productId
     OrderItemResponse toOrderItemResponse(OrderItem orderItem);
-
-
-
 }
