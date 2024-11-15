@@ -80,6 +80,8 @@ public class ProductService {
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         productMapper.updateProduct(product, productUpdateRequest);
+        var urlImg = cloudinaryService.uploadImage(productUpdateRequest.getImage());
+        product.setImage(urlImg);
 
         return productMapper.toProductResponse(productRepository.save(product));
     }

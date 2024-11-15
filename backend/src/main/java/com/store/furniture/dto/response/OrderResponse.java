@@ -1,5 +1,6 @@
 package com.store.furniture.dto.response;
 
+import com.store.furniture.entity.User;
 import com.store.furniture.enums.OrderStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,14 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderResponse {
-//    String id;
-//    String customerId;
-//    OrderStatus status;
-//    Double totalAmount;
-//    String shippingAddress;
-//    String shippingPhoneNumber;
-
      String id;
+     String userId;
      double totalAmount;
      OrderStatus status;
      Instant createdAt;

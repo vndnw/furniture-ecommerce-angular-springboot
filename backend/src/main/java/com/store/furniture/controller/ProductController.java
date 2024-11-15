@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     @PutMapping("{id}")
-    ApiResponse<ProductResponse> updateProduct(@PathVariable String id, @RequestBody @Valid ProductUpdateRequest productUpdateRequest) {
+    ApiResponse<ProductResponse> updateProduct(@PathVariable String id, @Valid ProductUpdateRequest productUpdateRequest) {
         var product = productService.updateProduct(id, productUpdateRequest);
         return ApiResponse.<ProductResponse>builder().data(product).build();
     }

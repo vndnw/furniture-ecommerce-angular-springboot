@@ -33,7 +33,7 @@ public class OrderService {
     ProductRepository productRepository;
 
     public OrderResponse createOrder(OrderCreationRequest orderRequest) {
-        var user = userRepository.findById(orderRequest.getCustomerId())
+        var user = userRepository.findById(orderRequest.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
 
         Order order = new Order();
@@ -56,7 +56,7 @@ public class OrderService {
         order.setTotalAmount(orderItems.stream().mapToDouble(OrderItem::getPrice).sum());
 
         orderRepository.save(order);
-
+var te = orderMapper.toResponse(order);
         return orderMapper.toResponse(order);
     }
 

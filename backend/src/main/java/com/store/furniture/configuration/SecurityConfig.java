@@ -18,12 +18,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_ENDPOINTS = {
-            "/users",
+    private final String[] POST_PUBLIC_ENDPOINTS = {
+            "/auth/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
+    private final String[] GET_PUBLIC_ENDPOINTS = {
             "/products",
-            "/auth/token",
-            "/auth/introspect",
-            "/auth/logout"
+            "/categories",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
     };
 
     @Autowired
@@ -33,8 +37,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(requests ->
                 requests
-                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer ->

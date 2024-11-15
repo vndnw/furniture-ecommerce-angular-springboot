@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderCreationRequest {
-    String customerId;
+    String userId;
     List<OrderItemRequest> orderItems;
 }
