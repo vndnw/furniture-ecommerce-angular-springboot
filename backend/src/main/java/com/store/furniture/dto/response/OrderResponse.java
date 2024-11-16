@@ -16,6 +16,9 @@ import lombok.experimental.FieldDefaults;
 public class OrderResponse {
     String id;
     String userId;
+    String shippingAddress;
+    String phoneNumber;
+    String fullName;
     double totalAmount;
     OrderStatus status;
     Instant createdAt;

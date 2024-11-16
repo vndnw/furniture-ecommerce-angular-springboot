@@ -48,6 +48,13 @@ public enum ErrorCode {
     PRICE_MANDATORY(1036, "Price is mandatory", HttpStatus.BAD_REQUEST),
     IMAGE_MANDATORY(1037, "Image is mandatory", HttpStatus.BAD_REQUEST),
     CATEGORY_ID_MANDATORY(1038, "Category ID is mandatory", HttpStatus.BAD_REQUEST),
+    PRODUCT_ID_MANDATORY(1039, "Product ID is mandatory", HttpStatus.BAD_REQUEST),
+    QUANTITY_MANDATORY(1040, "Quantity is mandatory", HttpStatus.BAD_REQUEST),
+    QUANTITY_MINIMUM(1041, "Quantity must be at least 1", HttpStatus.BAD_REQUEST),
+    ORDER_STATUS_MANDATORY(1042, "Order status is mandatory", HttpStatus.BAD_REQUEST),
+    INVALID_CURRENT_PASSWORD(1043, "Current password is incorrect", HttpStatus.BAD_REQUEST),
+    CURRENT_PASSWORD_MANDATORY(1044, "Current password is mandatory", HttpStatus.BAD_REQUEST),
+    NEW_PASSWORD_MANDATORY(1045, "New password is mandatory", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;

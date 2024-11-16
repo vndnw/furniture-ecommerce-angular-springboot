@@ -73,7 +73,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().authenticated(true).token(token).build();
     }
 
-    public void Logout(LogoutRequest logoutRequest) throws ParseException, JOSEException {
+    public void logout(LogoutRequest logoutRequest) throws ParseException, JOSEException {
         var signToken = verifyToken(logoutRequest.getToken());
 
         String jit = signToken.getJWTClaimsSet().getJWTID();

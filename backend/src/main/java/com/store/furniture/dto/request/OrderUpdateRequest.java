@@ -1,17 +1,15 @@
 package com.store.furniture.dto.request;
 
-import java.util.List;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.experimental.FieldNameConstants;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderCreationRequest {
+@FieldNameConstants(level = AccessLevel.PRIVATE)
+public class OrderUpdateRequest {
     String shippingAddress;
     String phoneNumber;
     String fullName;
-    List<OrderItemRequest> orderItems;
 }

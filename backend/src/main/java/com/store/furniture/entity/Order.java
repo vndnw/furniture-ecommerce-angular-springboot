@@ -26,6 +26,10 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
+    String shippingAddress;
+    String phoneNumber;
+    String fullName;
+
     @Enumerated(EnumType.STRING)
     OrderStatus status;
 

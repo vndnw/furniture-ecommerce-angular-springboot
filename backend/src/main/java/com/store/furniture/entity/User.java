@@ -1,9 +1,6 @@
 package com.store.furniture.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import java.time.Instant;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,7 +19,10 @@ public class User {
     String id;
 
     String name;
+
+    @Column(name = "username", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String username;
+
     String password;
     String email;
     String address;

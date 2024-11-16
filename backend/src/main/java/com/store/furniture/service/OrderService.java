@@ -1,11 +1,14 @@
 package com.store.furniture.service;
 
 import com.store.furniture.dto.request.OrderCreationRequest;
+import com.store.furniture.dto.request.OrderUpdateRequest;
+import com.store.furniture.dto.request.OrderUpdateStatusRequest;
 import com.store.furniture.dto.response.OrderResponse;
 import com.store.furniture.dto.response.PaginatedResponse;
 import com.store.furniture.entity.Order;
 import com.store.furniture.entity.OrderItem;
 import com.store.furniture.entity.Product;
+import com.store.furniture.entity.User;
 import com.store.furniture.enums.OrderStatus;
 import com.store.furniture.exception.AppException;
 import com.store.furniture.exception.ErrorCode;
@@ -20,6 +23,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,11 +36,14 @@ public class OrderService {
     ProductRepository productRepository;
 
     public OrderResponse createOrder(OrderCreationRequest orderRequest) {
+        String authenticatedUsername =
+                SecurityContextHolder.getContext().getAuthentication().getName();
+
         var user = userRepository
-                .findById(orderRequest.getUserId())
+                .findByUsername(authenticatedUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
 
-        Order order = new Order();
+        Order order = orderMapper.toOrder(orderRequest);
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
 
@@ -59,24 +66,46 @@ public class OrderService {
         order.setTotalAmount(
                 orderItems.stream().mapToDouble(OrderItem::getPrice).sum());
 
-        orderRepository.save(order);
-        var te = orderMapper.toResponse(order);
-        return orderMapper.toResponse(order);
+        return orderMapper.toResponse(orderRepository.save(order));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public OrderResponse updateOrderStatus(String orderId, OrderStatus status) {
+    public OrderResponse updateOrderStatus(String orderId, OrderUpdateStatusRequest orderUpdateStatusRequest) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
-        order.setStatus(status);
-        orderRepository.save(order);
+        order.setStatus(orderUpdateStatusRequest.getStatus());
 
-        return orderMapper.toResponse(order);
+        return orderMapper.toResponse(orderRepository.save(order));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public OrderResponse updateOrder(String orderId, OrderUpdateRequest orderUpdateRequest) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        orderMapper.updateOrder(order, orderUpdateRequest);
+        return orderMapper.toResponse(orderRepository.save(order));
     }
 
     public PaginatedResponse<OrderResponse> getAllOrders(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         var orderPage = orderRepository.findAll(pageable);
+        var orders = orderPage.stream().map(orderMapper::toResponse).toList();
+        return PaginatedResponse.<OrderResponse>builder()
+                .data(orders)
+                .currentPage(orderPage.getNumber())
+                .totalPages(orderPage.getTotalPages())
+                .totalItems(orderPage.getTotalElements())
+                .build();
+    }
+
+    public PaginatedResponse<OrderResponse> getOrdersByUser(int page, int size) {
+        String authenticatedUsername =
+                SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository
+                .findByUsername(authenticatedUsername)
+                .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
+        Pageable pageable = PageRequest.of(page, size);
+        var orderPage = orderRepository.findByUser(user, pageable);
         var orders = orderPage.stream().map(orderMapper::toResponse).toList();
         return PaginatedResponse.<OrderResponse>builder()
                 .data(orders)

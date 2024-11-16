@@ -1,5 +1,7 @@
 package com.store.furniture.service;
 
+import com.store.furniture.dto.request.ChangePasswordRequest;
+import com.store.furniture.dto.request.ResetPasswordRequest;
 import com.store.furniture.dto.request.UserCreationRequest;
 import com.store.furniture.dto.request.UserUpdateRequest;
 import com.store.furniture.dto.response.UserResponse;
@@ -70,21 +72,21 @@ public class UserService {
         return userMapper.toResponse(userRepository.save(user));
     }
 
-    public UserResponse updateUser(String id, UserUpdateRequest userUpdateRequest) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponse updateUserByAdmin(String id, UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+
+        userMapper.updateUser(user, userUpdateRequest);
+        return userMapper.toResponse(userRepository.save(user));
+    }
+
+    public UserResponse updateUser(UserUpdateRequest userUpdateRequest) {
         String authenticatedUsername =
                 SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User authenticatedUser = userRepository
+        User user = userRepository
                 .findByUsername(authenticatedUsername)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
-
-        boolean isAdmin = authenticatedUser.getRole().equals("ADMIN");
-
-        if (!isAdmin && !authenticatedUser.getId().equals(id)) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
-
-        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
 
         userMapper.updateUser(user, userUpdateRequest);
         return userMapper.toResponse(userRepository.save(user));
@@ -96,6 +98,29 @@ public class UserService {
                 .findByUsername(userDetails.getName())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
         return userMapper.toResponse(user);
+    }
+
+    public UserResponse changePassword(ChangePasswordRequest changePasswordRequest) {
+        String authenticatedUsername =
+                SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository
+                .findByUsername(authenticatedUsername)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+
+        if (!passwordEncoder.matches(changePasswordRequest.getCurrentPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.INVALID_CURRENT_PASSWORD);
+        }
+
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+        return userMapper.toResponse(userRepository.save(user));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponse resetPassword(String userId, ResetPasswordRequest resetPasswordRequest) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -18,8 +18,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] POST_PUBLIC_ENDPOINTS = {"/auth/**", "/v3/api-docs/**", "/swagger-ui/**"};
-    private final String[] GET_PUBLIC_ENDPOINTS = {"/products", "/categories", "/v3/api-docs/**", "/swagger-ui/**"};
+    private static final String[] POST_PUBLIC_ENDPOINTS = {"/users", "/auth/**", "/v3/api-docs/**", "/swagger-ui/**"};
+    private static final String[] GET_PUBLIC_ENDPOINTS = {
+        "/products/**", "/categories", "/v3/api-docs/**", "/swagger-ui/**"
+    };
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;

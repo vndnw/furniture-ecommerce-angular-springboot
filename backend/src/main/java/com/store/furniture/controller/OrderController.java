@@ -2,9 +2,10 @@ package com.store.furniture.controller;
 
 import com.store.furniture.dto.ApiResponse;
 import com.store.furniture.dto.request.OrderCreationRequest;
+import com.store.furniture.dto.request.OrderUpdateRequest;
+import com.store.furniture.dto.request.OrderUpdateStatusRequest;
 import com.store.furniture.dto.response.OrderResponse;
 import com.store.furniture.dto.response.PaginatedResponse;
-import com.store.furniture.enums.OrderStatus;
 import com.store.furniture.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,15 +31,32 @@ public class OrderController {
                 .build();
     }
 
+    @GetMapping("/user")
+    ApiResponse<PaginatedResponse<OrderResponse>> getOrdersByUser(
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        var orders = orderService.getOrdersByUser(page, size);
+        return ApiResponse.<PaginatedResponse<OrderResponse>>builder()
+                .data(orders)
+                .build();
+    }
+
     @GetMapping("/{id}")
     ApiResponse<OrderResponse> getOrderById(@PathVariable String id) {
         var order = orderService.getOrderById(id);
         return ApiResponse.<OrderResponse>builder().data(order).build();
     }
 
-    @PutMapping("/{id}")
-    ApiResponse<OrderResponse> updateOrderStatus(@PathVariable String id, @RequestParam OrderStatus status) {
+    @PutMapping("/status/{id}")
+    ApiResponse<OrderResponse> updateOrderStatus(
+            @PathVariable String id, @RequestBody OrderUpdateStatusRequest status) {
         var order = orderService.updateOrderStatus(id, status);
+        return ApiResponse.<OrderResponse>builder().data(order).build();
+    }
+
+    @PutMapping("/{id}")
+    ApiResponse<OrderResponse> updateOrder(
+            @PathVariable String id, @RequestBody OrderUpdateRequest orderUpdateRequest) {
+        var order = orderService.updateOrder(id, orderUpdateRequest);
         return ApiResponse.<OrderResponse>builder().data(order).build();
     }
 
