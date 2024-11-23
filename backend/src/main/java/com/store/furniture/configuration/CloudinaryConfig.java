@@ -1,15 +1,19 @@
 package com.store.furniture.configuration;
 
 import com.cloudinary.Cloudinary;
-import io.github.cdimascio.dotenv.Dotenv;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CloudinaryConfig {
+    @NonFinal
+    @Value("${cloudinary.url}")
+    String cloudinaryUrl;
+
     @Bean
     public Cloudinary getCloudinary() {
-        Dotenv dotenv = Dotenv.load();
-        return new Cloudinary(dotenv.get("CLOUDINARY_URL"));
+        return new Cloudinary(cloudinaryUrl);
     }
 }

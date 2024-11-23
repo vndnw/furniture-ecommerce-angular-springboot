@@ -1,5 +1,6 @@
 package com.store.furniture.service;
 
+import com.store.furniture.dto.request.EmailDetailsRequest;
 import com.store.furniture.dto.request.OrderCreationRequest;
 import com.store.furniture.dto.request.OrderUpdateRequest;
 import com.store.furniture.dto.request.OrderUpdateStatusRequest;
@@ -34,6 +35,7 @@ public class OrderService {
     OrderMapper orderMapper;
     UserRepository userRepository;
     ProductRepository productRepository;
+    EmailService emailService;
 
     public OrderResponse createOrder(OrderCreationRequest orderRequest) {
         String authenticatedUsername =
@@ -66,7 +68,27 @@ public class OrderService {
         order.setTotalAmount(
                 orderItems.stream().mapToDouble(OrderItem::getPrice).sum());
 
-        return orderMapper.toResponse(orderRepository.save(order));
+        Order savedOrder = orderRepository.save(order);
+
+        // Send thank you email notification to the customer
+        String message = String.format(
+                "Cảm ơn %s đã đặt hàng tại cửa hàng của chúng tôi.\nMã đơn hàng: #%s\nTên khách hàng: %s\nSố điện thoại: %s\nĐịa chỉ giao hàng: %s\nTổng số tiền: %.2fđ",
+                savedOrder.getFullName(),
+                savedOrder.getId(),
+                savedOrder.getFullName(),
+                savedOrder.getPhoneNumber(),
+                savedOrder.getShippingAddress(),
+                savedOrder.getTotalAmount());
+
+        EmailDetailsRequest emailDetailsRequest = EmailDetailsRequest.builder()
+                .recipient(savedOrder.getUser().getEmail())
+                .message(message)
+                .subject("Đơn đặt hàng thành công #" + savedOrder.getId())
+                .build();
+
+        emailService.sendSimpleMail(emailDetailsRequest);
+
+        return orderMapper.toResponse(savedOrder);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -74,6 +96,24 @@ public class OrderService {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         order.setStatus(orderUpdateStatusRequest.getStatus());
+
+        // Send email notification to the customer
+        String message = String.format(
+                "Trạng thái đơn hàng của bạn đã được cập nhật thành: %s\nMã đơn hàng: #%s\nTên khách hàng: %s\nSố điện thoại: %s\nĐịa chỉ giao hàng: %s\nTổng số tiền: %.2fđ",
+                order.getStatus(),
+                order.getId(),
+                order.getFullName(),
+                order.getPhoneNumber(),
+                order.getShippingAddress(),
+                order.getTotalAmount());
+
+        EmailDetailsRequest emailDetailsRequest = EmailDetailsRequest.builder()
+                .recipient(order.getUser().getEmail())
+                .message(message)
+                .subject("Cập nhật trạng thái đơn hàng #" + order.getId())
+                .build();
+
+        emailService.sendSimpleMail(emailDetailsRequest);
 
         return orderMapper.toResponse(orderRepository.save(order));
     }
