@@ -2,9 +2,7 @@ package com.store.furniture.controller;
 
 import com.nimbusds.jose.JOSEException;
 import com.store.furniture.dto.ApiResponse;
-import com.store.furniture.dto.request.AuthenticationRequest;
-import com.store.furniture.dto.request.IntrospectRequest;
-import com.store.furniture.dto.request.LogoutRequest;
+import com.store.furniture.dto.request.*;
 import com.store.furniture.dto.response.AuthenticationResponse;
 import com.store.furniture.dto.response.IntrospectResponse;
 import com.store.furniture.service.AuthenticationService;
@@ -41,6 +39,17 @@ public class AuthenticationController {
     @PostMapping("/logout")
     ApiResponse<Void> logout(@RequestBody LogoutRequest logoutRequest) throws ParseException, JOSEException {
         authenticationService.logout(logoutRequest);
+        return ApiResponse.<Void>builder().build();
+    }
+
+    @PostMapping("/sendOtp")
+    ApiResponse<Void> sendOtp(@RequestBody @Valid ForgotPasswordRequest forgotPasswordRequest) {
+        authenticationService.sendOtp(forgotPasswordRequest);
+        return ApiResponse.<Void>builder().build();
+    }
+    @PostMapping("/verifyOtp")
+    ApiResponse<Void> verifyOtp(@RequestBody @Valid VerifyOtpRequest verifyOtpRequest) {
+        authenticationService.verifyOtp(verifyOtpRequest);
         return ApiResponse.<Void>builder().build();
     }
 }

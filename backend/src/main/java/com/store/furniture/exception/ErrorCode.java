@@ -55,6 +55,9 @@ public enum ErrorCode {
     INVALID_CURRENT_PASSWORD(1043, "Current password is incorrect", HttpStatus.BAD_REQUEST),
     CURRENT_PASSWORD_MANDATORY(1044, "Current password is mandatory", HttpStatus.BAD_REQUEST),
     NEW_PASSWORD_MANDATORY(1045, "New password is mandatory", HttpStatus.BAD_REQUEST),
+    OTP_MANDATORY(1046, "OTP is mandatory", HttpStatus.BAD_REQUEST),
+    OTP_INCORRECT(1047, "OTP is incorrect", HttpStatus.BAD_REQUEST),
+    OTP_EXPIRED(1048, "OTP is expired", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;

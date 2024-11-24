@@ -5,21 +5,22 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.store.furniture.dto.request.AuthenticationRequest;
-import com.store.furniture.dto.request.IntrospectRequest;
-import com.store.furniture.dto.request.LogoutRequest;
+import com.store.furniture.dto.request.*;
 import com.store.furniture.dto.response.AuthenticationResponse;
 import com.store.furniture.dto.response.IntrospectResponse;
 import com.store.furniture.entity.InvalidatedToken;
+import com.store.furniture.entity.PasswordResetOtp;
 import com.store.furniture.entity.User;
 import com.store.furniture.exception.AppException;
 import com.store.furniture.exception.ErrorCode;
 import com.store.furniture.repository.InvalidatedTokenRepository;
+import com.store.furniture.repository.OtpRepository;
 import com.store.furniture.repository.UserRepository;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
-    UserRepository adminRepository;
+    UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    OtpRepository otpRepository;
+    EmailService emailService;
 
     @NonFinal
     @Value("${jwt.signer-key}")
@@ -61,7 +64,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
-        var user = adminRepository
+        var user = userRepository
                 .findByUsername(authenticationRequest.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -82,6 +85,55 @@ public class AuthenticationService {
                 InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
         invalidatedTokenRepository.save(invalidatedToken);
+    }
+    
+    
+    public void sendOtp(ForgotPasswordRequest forgotPasswordRequest) {
+        var user = userRepository
+                .findByEmail(forgotPasswordRequest.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+
+        String otp = String.format("%06d", new Random().nextInt(999999));
+
+        PasswordResetOtp passwordResetOtp = PasswordResetOtp.builder()
+                .email(user.getEmail())
+                .otp(otp)
+                .expiryTime(Instant.now().plus(5, ChronoUnit.MINUTES))
+                .build();
+        otpRepository.save(passwordResetOtp);
+
+        EmailDetailsRequest emailDetailsRequest = EmailDetailsRequest.builder()
+                .recipient(user.getEmail())
+                .subject("Your OTP for Password Reset")
+                .message("Your OTP is: " + otp + ". It is valid for 5 minutes.")
+                .build();
+
+        emailService.sendSimpleMail(emailDetailsRequest);
+    }
+
+    public void verifyOtp(VerifyOtpRequest verifyOtpRequest) {
+        var otp = otpRepository
+                .findByEmailAndOtp(verifyOtpRequest.getEmail(), verifyOtpRequest.getOtp())
+                .orElseThrow(() -> new AppException(ErrorCode.OTP_INCORRECT));
+
+        if (otp.getExpiryTime().isBefore(Instant.now()))
+            throw new AppException(ErrorCode.OTP_EXPIRED);
+        var user = userRepository
+                .findByEmail(verifyOtpRequest.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        user.setPassword(passwordEncoder.encode(verifyOtpRequest.getNewPassword()));
+        userRepository.save(user);
+
+        otpRepository.delete(otp);
+
+        EmailDetailsRequest emailDetailsRequest = EmailDetailsRequest.builder()
+                .recipient(user.getEmail())
+                .subject("Password Reset Successful")
+                .message("Your password has been reset successfully.")
+                .build();
+        emailService.sendSimpleMail(emailDetailsRequest);
     }
 
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
