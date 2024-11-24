@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,10 +23,10 @@ import org.springframework.web.filter.CorsFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
     private static final String[] POST_PUBLIC_ENDPOINTS = {
-        "/users", "/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/mails"
+        "/users/**", "/auth/**", "/v3/api-docs/**", "/mails"
     };
     private static final String[] GET_PUBLIC_ENDPOINTS = {
-        "/products/**", "/categories", "/v3/api-docs/**", "/swagger-ui/**", "/mails"
+        "/products/**", "/categories", "/v3/api-docs/**", "/mails"
     };
 
     @Autowired
@@ -33,6 +34,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.cors(Customizer.withDefaults());
+
         httpSecurity.authorizeHttpRequests(requests -> requests.requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS)
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS)
@@ -59,9 +62,11 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
+//        corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
         corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
         corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+//        corsConfiguration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
