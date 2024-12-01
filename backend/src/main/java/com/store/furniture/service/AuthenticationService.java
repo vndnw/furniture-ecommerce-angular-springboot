@@ -86,8 +86,7 @@ public class AuthenticationService {
 
         invalidatedTokenRepository.save(invalidatedToken);
     }
-    
-    
+
     public void sendOtp(ForgotPasswordRequest forgotPasswordRequest) {
         var user = userRepository
                 .findByEmail(forgotPasswordRequest.getEmail())
@@ -116,8 +115,7 @@ public class AuthenticationService {
                 .findByEmailAndOtp(verifyOtpRequest.getEmail(), verifyOtpRequest.getOtp())
                 .orElseThrow(() -> new AppException(ErrorCode.OTP_INCORRECT));
 
-        if (otp.getExpiryTime().isBefore(Instant.now()))
-            throw new AppException(ErrorCode.OTP_EXPIRED);
+        if (otp.getExpiryTime().isBefore(Instant.now())) throw new AppException(ErrorCode.OTP_EXPIRED);
         var user = userRepository
                 .findByEmail(verifyOtpRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));

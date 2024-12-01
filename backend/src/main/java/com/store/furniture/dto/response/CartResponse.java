@@ -14,5 +14,4 @@ import lombok.experimental.FieldDefaults;
 public class CartResponse {
     String id;
     List<CartItemResponse> cartItems;
-    double totalAmount;
 }

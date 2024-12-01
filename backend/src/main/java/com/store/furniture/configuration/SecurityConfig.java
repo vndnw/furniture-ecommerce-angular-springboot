@@ -22,12 +22,8 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private static final String[] POST_PUBLIC_ENDPOINTS = {
-        "/users/**", "/auth/**", "/v3/api-docs/**", "/mails"
-    };
-    private static final String[] GET_PUBLIC_ENDPOINTS = {
-        "/products/**", "/categories", "/v3/api-docs/**", "/mails"
-    };
+    private static final String[] POST_PUBLIC_ENDPOINTS = {"/users/**", "/auth/**", "/v3/api-docs/**", "/mails"};
+    private static final String[] GET_PUBLIC_ENDPOINTS = {"/products/**", "/categories", "/v3/api-docs/**", "/mails"};
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
@@ -62,11 +58,11 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-//        corsConfiguration.addAllowedOriginPattern("*");
+        //        corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
         corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
         corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
-//        corsConfiguration.setAllowCredentials(true);
+        //        corsConfiguration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);

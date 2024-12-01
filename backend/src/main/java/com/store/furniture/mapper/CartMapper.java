@@ -11,9 +11,5 @@ import org.mapstruct.Mapping;
 public interface CartMapper {
 
     @Mapping(source = "cartItems", target = "cartItems")
-    @Mapping(
-            target = "totalAmount",
-            expression =
-                    "java(cart.getCartItems().stream().mapToDouble(item -> item.getQuantity() * item.getPrice()).sum())")
     CartResponse toResponse(Cart cart);
 }

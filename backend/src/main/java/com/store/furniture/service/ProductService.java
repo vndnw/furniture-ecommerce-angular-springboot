@@ -36,8 +36,10 @@ public class ProductService {
                 .findById(productCreationRequest.getCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         Product product = productMapper.toProduct(productCreationRequest);
-        var urlImg = cloudinaryService.uploadImage(productCreationRequest.getImage());
-        product.setImage(urlImg);
+        if (productCreationRequest.getImage() != null) {
+            var urlImg = cloudinaryService.uploadImage(productCreationRequest.getImage());
+            product.setImage(urlImg);
+        }
         return productMapper.toProductResponse(productRepository.save(product));
     }
 

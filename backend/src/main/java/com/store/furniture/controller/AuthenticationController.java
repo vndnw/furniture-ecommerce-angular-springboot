@@ -47,6 +47,7 @@ public class AuthenticationController {
         authenticationService.sendOtp(forgotPasswordRequest);
         return ApiResponse.<Void>builder().build();
     }
+
     @PostMapping("/verifyOtp")
     ApiResponse<Void> verifyOtp(@RequestBody @Valid VerifyOtpRequest verifyOtpRequest) {
         authenticationService.verifyOtp(verifyOtpRequest);

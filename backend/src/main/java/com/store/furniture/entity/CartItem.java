@@ -13,8 +13,8 @@ import lombok.experimental.FieldDefaults;
 public class CartItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
 
     @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
@@ -25,5 +25,5 @@ public class CartItem {
     Product product;
 
     int quantity;
-    double price;
+    //    double price;
 }

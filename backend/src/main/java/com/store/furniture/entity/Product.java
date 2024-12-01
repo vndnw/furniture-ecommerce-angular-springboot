@@ -5,9 +5,11 @@ import java.time.Instant;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SoftDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
+@SoftDelete
 @Data
 @Builder
 @NoArgsConstructor

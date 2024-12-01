@@ -9,6 +9,8 @@ import com.store.furniture.mapper.CartMapper;
 import com.store.furniture.repository.CartRepository;
 import com.store.furniture.repository.ProductRepository;
 import com.store.furniture.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -56,9 +58,10 @@ public class CartService {
                 .findById(itemToCartRequest.getProductId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        Optional<CartItem> existingItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getId().equals(itemToCartRequest.getProductId()))
-                .findFirst();
+        Optional<CartItem> existingItem =
+                Optional.ofNullable(cart.getCartItems()).orElseGet(Collections::emptyList).stream()
+                        .filter(item -> item.getProduct().getId().equals(itemToCartRequest.getProductId()))
+                        .findFirst();
 
         if (existingItem.isPresent()) {
             CartItem item = existingItem.get();
@@ -68,7 +71,6 @@ public class CartService {
             newItem.setCart(cart);
             newItem.setProduct(product);
             newItem.setQuantity(itemToCartRequest.getQuantity());
-            newItem.setPrice(product.getPrice());
             cart.getCartItems().add(newItem);
         }
 
@@ -128,6 +130,7 @@ public class CartService {
         User user = new User();
         user.setId(customerId);
         cart.setUser(user);
+        cart.setCartItems(new ArrayList<>());
         return cartRepository.save(cart);
     }
 }

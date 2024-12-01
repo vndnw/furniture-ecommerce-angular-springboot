@@ -7,9 +7,11 @@ import java.util.List;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SoftDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
+@SoftDelete
 @Table(name = "orders")
 @Data
 @Builder

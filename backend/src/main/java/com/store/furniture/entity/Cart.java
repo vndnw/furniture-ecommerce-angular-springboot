@@ -17,8 +17,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class Cart {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)

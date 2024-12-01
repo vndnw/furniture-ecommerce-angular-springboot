@@ -11,6 +11,7 @@ import com.store.furniture.exception.AppException;
 import com.store.furniture.exception.ErrorCode;
 import com.store.furniture.mapper.UserMapper;
 import com.store.furniture.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -124,7 +125,9 @@ public class UserService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     public void deleteUser(String id) {
-        userRepository.deleteById(id);
+        var user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTS));
+        userRepository.delete(user);
     }
 }
